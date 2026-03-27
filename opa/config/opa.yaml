@@ -1,0 +1,4 @@
+services: {}
+
+decision_logs:
+  console: true

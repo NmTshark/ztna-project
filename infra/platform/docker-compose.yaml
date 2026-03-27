@@ -1,0 +1,90 @@
+services:
+  kc-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloakpass
+    volumes:
+      - kc_db:/var/lib/postgresql/data
+    restart: unless-stopped
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    command: ["start-dev", "--http-port=8080", "--import-realm"]
+    depends_on:
+      - kc-db
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://kc-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloakpass
+      KEYCLOAK_ADMIN: ${KC_ADMIN_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASS}
+    ports:
+      - "8081:8080"
+    volumes:
+      - ../../keycloak/realm:/opt/keycloak/data/import
+    restart: unless-stopped
+  fleet-mysql:
+    image: mysql:8.0
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    environment:
+      MYSQL_DATABASE: fleet
+      MYSQL_USER: fleet
+      MYSQL_PASSWORD: fleetpass
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - fleet_mysql:/var/lib/mysql
+  fleet-redis:
+    image: redis:7
+  fleet:
+    image: fleetdm/fleet:latest
+    depends_on:
+      - fleet-mysql
+      - fleet-redis
+    environment:
+      FLEET_MYSQL_ADDRESS: fleet-mysql:3306
+      FLEET_MYSQL_DATABASE: fleet
+      FLEET_MYSQL_USERNAME: fleet
+      FLEET_MYSQL_PASSWORD: fleetpass
+      FLEET_REDIS_ADDRESS: fleet-redis:6379
+      FLEET_SERVER_ADDRESS: 0.0.0.0:8080
+      FLEET_SERVER_TLS: "false"
+      FLEET_SERVER_URL: "https://fleet.lab.local:8443"
+      # Demo-tuned posture refresh
+      FLEET_OSQUERY_POLICY_UPDATE_INTERVAL: 15s
+      FLEET_OSQUERY_DETAIL_UPDATE_INTERVAL: 15s
+      FLEET_OSQUERY_LABEL_UPDATE_INTERVAL: 30s
+    expose:
+      - "8080"
+  fleet-prepare-db:
+     image: fleetdm/fleet:latest
+     depends_on:
+       - fleet-mysql
+       - fleet-redis
+     environment:
+         FLEET_MYSQL_ADDRESS: fleet-mysql:3306
+         FLEET_MYSQL_DATABASE: fleet
+         FLEET_MYSQL_USERNAME: fleet
+         FLEET_MYSQL_PASSWORD: fleetpass
+         FLEET_REDIS_ADDRESS: fleet-redis:6379
+         FLEET_SERVER_TLS: "false"
+     command: ["fleet", "prepare", "db"]
+     restart: "no"
+  caddy:
+    image: caddy:2
+    depends_on:
+      - fleet
+    ports:
+      - "8443:443"
+    volumes:
+      - ../../fleet/enroll/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  kc_db:
+  fleet_mysql:
+  caddy_data:
+  caddy_config:
+

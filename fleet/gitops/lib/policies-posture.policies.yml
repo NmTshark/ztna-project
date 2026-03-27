@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: "Windows - Forbidden process not running (Calculator)"
+  description: "Fails when Windows Calculator is running. SAFE trigger for posture violation."
+  resolution: "Close Calculator. Wait ~15 seconds or trigger Fleet Desktop refresh."
+  query: "SELECT 1 FROM processes WHERE name IN ('CalculatorApp.exe','calc.exe','numbers.exe');"
+  platform: windows
+  critical: false
+
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: "macOS - Forbidden process not running (Calculator)"
+  description: "Fails when macOS Calculator is running. SAFE trigger for posture violation."
+  resolution: "Quit Calculator.app. Wait ~15 seconds or trigger Fleet Desktop refresh."
+  query: "SELECT 1 FROM processes WHERE name = 'Calculator';"
+  platform: darwin
+  critical: false
+
+---
+apiVersion: v1
+kind: policy
+spec:
+  name: "All - Compliance marker present"
+  description: "Passes only if compliance marker file exists. Deterministic remediation toggle."
+  resolution: "Create marker: Windows C:\\ProgramData\\ztna_compliant.marker ; macOS /var/tmp/ztna_compliant.marker"
+  query: "SELECT 1 FROM file WHERE path IN ('C:\\ProgramData\\ztna_compliant.marker','/var/tmp/ztna_compliant.marker');"
+  platform: windows,darwin,linux
+  critical: false

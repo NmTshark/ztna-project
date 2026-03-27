@@ -1,0 +1,67 @@
+{
+  "realm": "sme-lab",
+  "enabled": true,
+  "displayName": "SME ZTNA Lab",
+  "users": [
+    {
+      "username": "alice.hr",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "alice.hr@lab.local",
+      "credentials": [{"type": "password", "value": "Password1!", "temporary": false}],
+      "realmRoles": ["role.hr"]
+    },
+    {
+      "username": "bob.sales",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "bob.sales@lab.local",
+      "credentials": [{"type": "password", "value": "Password1!", "temporary": false}],
+      "realmRoles": ["role.sales"]
+    },
+    {
+      "username": "carol.admin",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "carol.admin@lab.local",
+      "credentials": [{"type": "password", "value": "Password1!", "temporary": false}],
+      "realmRoles": ["role.admin"]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {"name": "role.hr"},
+      {"name": "role.sales"},
+      {"name": "role.admin"}
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "posture-orchestrator",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "orchestrator-secret-change-me",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "redirectUris": ["http://orchestrator.lab.local:8090/*"],
+      "webOrigins": ["+"],
+      "attributes": {"post.logout.redirect.uris": "+"}
+    },
+    {
+      "clientId": "openziti-client",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [
+        "http://127.0.0.1:20314/auth/callback",
+        "http://localhost:20314/auth/callback",
+        "ziti-edge-tunnel://auth/callback"
+      ],
+      "webOrigins": ["+"]
+    }
+  ]
+}

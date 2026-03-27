@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: config
+spec:
+  agent_options:
+    config:
+      decorators:
+        load:
+          - "SELECT uuid AS host_uuid FROM system_info;"
+          - "SELECT hostname AS hostname FROM system_info;"
+      options:
+        disable_distributed: false
+        distributed_interval: 15
+        logger_tls_period: 15
+        schedule_splay_percent: 0

@@ -1,0 +1,12 @@
+services:
+  orchestrator:
+    build: ../../orchestrator
+    volumes:
+      - ../../orchestrator/app:/app/app
+      - ../../orchestrator/config:/app/config:ro
+      - ../../orchestrator/state:/app/state
+      - ../../orchestrator/exports:/app/exports
+    depends_on:
+      - opa
+      - fleet
+    restart: unless-stopped

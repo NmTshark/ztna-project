@@ -1,0 +1,4 @@
+fleet.lab.local {
+  tls internal
+  reverse_proxy fleet:8080
+}

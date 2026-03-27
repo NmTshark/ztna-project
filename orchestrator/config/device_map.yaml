@@ -1,0 +1,15 @@
+devices:
+  - hostname: "TINH-2304"
+    role: "role.sales"
+    user_email: "tinh.sales@lab.local"
+
+  - hostname: "TRUNG"
+    role: "role.it"
+    user_email: "trung.it@lab.local"
+
+  - hostname: "LAPTOP-ON35J0KK"
+    role: "role.it"
+    user_email: "toan.it@lab.local"
+  - hostname: "tshark"  
+    role: "role.it"
+    user_email: "linux.dev@lab.local"

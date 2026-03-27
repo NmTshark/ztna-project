@@ -1,0 +1,31 @@
+poll_interval_seconds: 5
+
+fleet:
+  url: "https://fleet.lab.local:8443"
+  api_token: "J6n5bcrO+Y/qL4jRYEWaGadFNibS8Jm+upGOnA7rqECIuOuHYOyVlWTXJpEHE7IQRNiH5z05GbD0/bsGpp90wQ=="
+  verify_tls: false   # lab dùng Caddy tls internal → để false cho nhanh; sau có thể gắn CA
+
+opa:
+  url: "http://opa.lab.local:8181"
+  decision_path: "/v1/data/posture/decision"
+
+ziti:
+  mgmt_url: "https://ziti-edge-controller.lab.local:1280"
+  username: "admin"
+  password: "passwordziti"
+  verify_tls: false
+
+mapping:
+  mode: "hostname"          # hostname | serial | uuid (lab dùng hostname)
+  ziti_identity_prefix: "ep-"
+
+posture_attributes:
+  compliant: "posture.compliant"
+  quarantine: "posture.quarantine"
+
+logging:
+  sqlite_path: "/app/state/orchestrator.db"
+  csv_path: "/app/exports/events.csv"
+
+enforcement:
+  revoke_sessions_on_quarantine: true

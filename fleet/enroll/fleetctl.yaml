@@ -1,0 +1,3 @@
+fleet:
+  address: https://fleet.lab.local:8443
+  tls-skip-verify: true
