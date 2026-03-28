@@ -26,4 +26,4 @@ export KC_ADMIN_PASS="passwordkeycloack"
 export FLEET_ADMIN_EMAIL="admin@${LAB_DOMAIN}"
 export FLEET_ADMIN_PASS="passwordfleet"
 
-echo "Đã tải xong các biến môi trường cho ZTNA Lab!"
+echo "Done"
