@@ -1,49 +1,57 @@
-# 🛡️ ZTNA: Context-Aware Zero Trust Network Access for SMEs
+# Research and Develop of a Zero Trust Network Access System Based on Endpoint Posture Assessment for Small and Medium-sized Enterprises.
 
-![Zero Trust](https://img.shields.io/badge/Architecture-Zero_Trust-blue)
-![OpenZiti](https://img.shields.io/badge/Network-OpenZiti-red)
-![Keycloak](https://img.shields.io/badge/Identity-Keycloak-orange)
-![FleetDM](https://img.shields.io/badge/Posture-FleetDM-purple)
-![OPA](https://img.shields.io/badge/Policy-OPA-green)
+![Architecture](https://img.shields.io/badge/Architecture-Zero_Trust-blue) ![Network](https://img.shields.io/badge/Network-OpenZiti-red) ![Identity](https://img.shields.io/badge/Identity-Keycloak-orange) ![Posture](https://img.shields.io/badge/Posture-FleetDM-purple) ![Policy](https://img.shields.io/badge/Policy-OPA-green)
 
-## 📖 Giới thiệu (Overview)
-**Zero Trust Network Access** là hệ thống Mạng lưới Truy cập Không tin cậy (Zero Trust Network Access) dựa trên đánh giá ngữ cảnh và sức khỏe thiết bị điểm cuối, được thiết kế tối ưu dành riêng cho các Doanh nghiệp Vừa và Nhỏ (SMEs).
+## 1. Triết lý Zero Trust
+Zero Trust không phải là một công nghệ đơn lẻ, mà là một chiến lược và mô hình bảo mật mạng dựa trên nguyên tắc cốt lõi: **"Không bao giờ tin tưởng, luôn luôn xác minh"** (Never Trust, Always Verify). 
 
-Hệ thống khắc phục triệt để lỗ hổng "niềm tin ngầm định" (Implicit Trust) của mạng VPN truyền thống bằng cách tách biệt hoàn toàn mặt phẳng điều khiển (Control Plane) và mặt phẳng dữ liệu (Data Plane). Ứng dụng nghiệp vụ được giấu kín (Dark Services) và quyền truy cập chỉ được cấp phát linh hoạt dựa trên sự kết hợp giữa **Danh tính người dùng (Identity)** và **Tình trạng bảo mật của thiết bị (Device Posture)** theo thời gian thực.
+Khác với mô hình bảo mật vành đai truyền thống (như VPN) - nơi người dùng được cấp sự "tin tưởng ngầm định" (implicit trust) khi đã vượt qua tường lửa để vào mạng nội bộ, Zero Trust giả định rằng các mối đe dọa luôn tồn tại ở cả bên ngoài lẫn bên trong mạng. Mọi yêu cầu truy cập đều phải được xác thực và ủy quyền liên tục dựa trên nhiều điểm dữ liệu động (ngữ cảnh) như: danh tính người dùng, tình trạng bảo mật của thiết bị, và chính sách quản trị, trước khi được cấp quyền truy cập vào một tài nguyên cụ thể (Micro-segmentation).
 
-## ✨ Tính năng nổi bật (Key Features)
-* **Xác minh liên tục (Continuous Verification):** Không chỉ xác thực lúc đăng nhập, hệ thống liên tục rà quét các tiến trình vi phạm, trạng thái firewall, và cấu hình thiết bị (chu kỳ ~10s).
-* **Vành đai tàng hình (Dark Network & Micro-segmentation):** Các dịch vụ lõi (HR, Sales) không mở bất kỳ port nào ra Internet. Người dùng chỉ được cấp một đường hầm mã hóa (mTLS) đến đúng ứng dụng được phép.
-* **Tự động hóa phản ứng (Automated SOAR):** Thời gian từ lúc phát hiện thiết bị nhiễm mã độc đến khi ngắt mạng vật lý chỉ diễn ra trong **~0.12 giây**, giảm bán kính sát thương (Blast Radius) về 0.
-* **Cách ly và Tự phục hồi (Self-Service Remediation):** Thiết bị vi phạm không bị ngắt Internet hoàn toàn mà được chuyển hướng an toàn vào mạng DMZ (Helpdesk Portal), cho phép người dùng tự khắc phục sự cố chỉ trong ~1.5 phút mà không cần IT can thiệp.
+## 2. Tổng quan Dự án
+Đây là dự án mini-capstone thuộc học phần **OSP201 - Open Source Platform and Network Administration**. 
 
-## ⚙️ Kiến trúc & Công nghệ (Tech Stack)
-Hệ thống được xây dựng hoàn toàn từ các công nghệ Mã nguồn mở (Open-source) hàng đầu, tối ưu hóa chi phí cho SME:
+Dự án tập trung triển khai một hệ thống Zero Trust cơ bản, tuân thủ các nguyên tắc của kiến trúc Zero Trust theo tiêu chuẩn **NIST SP 800-207**. Bằng cách tích hợp các công cụ mã nguồn mở, hệ thống tạo ra một vòng lặp bảo mật khép kín. 
 
-1. **Identity Provider (IdP):** `Keycloak` - Quản lý định danh, SSO và MFA.
-2. **Device Posture Agent:** `FleetDM` & `Osquery` - Tác nhân siêu nhẹ (<1% CPU) thu thập tình trạng thiết bị.
-3. **Policy Decision Point (PDP):** `Open Policy Agent (OPA)` - Bộ não ra quyết định truy cập dựa trên luật linh hoạt (Rego).
-4. **Policy Enforcement Point (PEP):** `OpenZiti` - Nền tảng mạng Overlay tạo kết nối vi phân đoạn.
-5. **Posture Orchestrator:** `Python3` - Middleware đóng vai trò kết nối và đồng bộ hóa luồng dữ liệu từ FleetDM sang OPA và kích hoạt Ziti API.
+Hệ thống khắc phục lỗ hổng của mạng VPN truyền thống bằng cách tách biệt hoàn toàn mặt phẳng điều khiển (Control Plane) và mặt phẳng dữ liệu (Data Plane). Các ứng dụng nghiệp vụ được cấu hình ẩn danh (Dark Services) khỏi Internet. Quyền truy cập được cấp phát linh hoạt và thu hồi tự động dựa trên sự kết hợp giữa **Danh tính người dùng (Identity)** và **Tình trạng sức khỏe thiết bị (Device Posture)** theo thời gian thực.
 
-## 🔄 Luồng hoạt động (Activity Flow)
-1. **Login:** Người dùng đăng nhập qua Ziti Desktop Edge, xác thực bằng Keycloak để nhận JWT.
-2. **Collect:** Osquery trên thiết bị cuối sẽ định kỳ gửi một bản trạng thái thiết bị (Posture) về FleetDM Server.
-3. **Evaluate:** FleetDM gửi các báo cáo vi phạm. Orchestrator chuyển dữ liệu cho OPA để đánh giá dựa trên Policy.
-4. **Enforce:** OPA trả về phán quyết (`quarantine` hoặc `compliant`). Orchestrator gọi API của OpenZiti để gán nhãn thiết bị.
-5. **Remediate:** Nếu bị `quarantine`, OpenZiti cắt đường hầm đến dịch vụ và chặn hoàn toàn người dùng, cách lý người dùng ra khỏi dịch vụ.
+## 3. Kiến trúc & Công nghệ
+Hệ thống được xây dựng từ các nền tảng mã nguồn mở, tối ưu chi phí nhưng vẫn đảm bảo tính toàn vẹn của mô hình Zero Trust:
 
-## 📊 Đánh giá Hiệu năng (Performance Evaluation)
-Hệ thống đã được kiểm thử thực nghiệm với các chỉ số phản hồi (Incident Response) vượt trội:
+- **Identity Provider (IdP):** `Keycloak` - Chịu trách nhiệm quản lý định danh, xác thực người dùng (SSO, MFA).
+- **Device Posture Agent:** `FleetDM` & `Osquery` - Tác nhân giám sát thiết bị điểm cuối, thu thập dữ liệu về các tiến trình và tình trạng tuân thủ bảo mật.
+- **Policy Decision Point (PDP):** `Open Policy Agent (OPA)` - Động cơ trung tâm phân tích dữ liệu và ra quyết định cấp quyền dựa trên ngôn ngữ Rego.
+- **Policy Enforcement Point (PEP):** `OpenZiti` - Nền tảng mạng Overlay chịu trách nhiệm thiết lập các đường hầm vi phân đoạn (mTLS) và thực thi lệnh đóng/mở mạng.
+- **Posture Orchestrator:** `Python3` - Middleware đóng vai trò cầu nối, đồng bộ hóa luồng sự kiện từ FleetDM sang OPA và gọi API để kích hoạt OpenZiti.
 
-| Hạng mục | Thành phần | Kết quả |
+## 4. Luồng hoạt động cốt lõi
+1. **Xác thực (Authenticate):** Người dùng đăng nhập thông qua Ziti Desktop Edge và được xác thực danh tính bởi Keycloak để nhận mã thông báo (JWT).
+2. **Giám sát (Monitor):** Tác nhân Osquery trên thiết bị định kỳ quét và gửi bản tóm tắt tình trạng thiết bị (Posture) về FleetDM Server.
+3. **Đánh giá (Evaluate):** Khi FleetDM phát hiện vi phạm (tuỳ vào chính sách được cấu hình), Orchestrator sẽ thu thập báo cáo và gửi cho OPA để đánh giá dựa trên bộ quy tắc hiện hành.
+4. **Thực thi (Enforce):** OPA trả về phán quyết (`quarantine` hoặc `compliant`). Orchestrator gọi API của OpenZiti để cập nhật nhãn (tag) cho thiết bị.
+5. **Cách ly (Isolate):** Nếu trạng thái là `quarantine`, OpenZiti lập tức đóng đường hầm vật lý đến dịch vụ nghiệp vụ, cách ly hoàn toàn thiết bị khỏi mạng lõi nhằm ngăn chặn lây lan (Lateral Movement).
+
+## 5. Đánh giá Hiệu năng thực nghiệm
+Hệ thống đã được cấu hình và kiểm thử thành công quá trình phản ứng tự động (SOAR) với các chỉ số đo lường như sau:
+
+
+| Hạng mục đo lường | Thành phần phụ trách | Kết quả trung bình |
 | :--- | :--- | :--- |
-| **TTD (Thời gian phát hiện)** | FleetDM / Osquery | `≤ 10s` (Trung bình ~5s) |
-| **Decision Latency (Ra quyết định)** | OPA | `~ 85 ms` |
-| **TTE (Thời gian thực thi cắt mạng)**| OpenZiti Controller | `~ 35 ms` |
-| **Thời gian tự phục hồi (Remediation)**|  | `~ 1 phút 30 giây` |
+| **Thời gian phát hiện (TTD)** | FleetDM / Osquery | `≤ 10s` (~5s) |
+| **Độ trễ ra quyết định** | Open Policy Agent (OPA) | `~ 85 ms` |
+| **Thời gian thực thi cắt mạng (TTE)** | OpenZiti Controller | `~ 35 ms` |
+| **Thời gian người dùng tự phục hồi**| Thao tác trên thiết bị | `~ 1 phút 30 giây` |
 
-Hiện tại dữ án này mới chỉ dừng lại ở mức độ cấu hình chính sách đơn giản ở mức một mini-capstone cho môn học OSP201. Trong tương lai, khi luật bảo vệ doanh nghiệp ở Việt Nam ngày càng được chú trọng thì tôi mong rằng những hệ thống bảo mật này có thể được triển khai phát triển và cải thiện hơn nữa.
+(Các chỉ số đo lường này được thu thập từ log của Middleware và đã được kiểm tra lại rõ ràng)
+## 6. Giới hạn của dự án
+Với khuôn khổ của một dự án mini-capstone môn học, hệ thống hiện tại vẫn tồn tại một số giới hạn:
+- **Mức độ triển khai:** Chỉ mới dừng lại ở việc chứng minh tính khả thi (Proof of Concept) của việc kết nối các luồng công cụ với nhau thành một vòng lặp khép kín.
+- **Chính sách bảo mật (Policy):** Các luật đánh giá trên OPA và FleetDM hiện được viết ở mức độ cơ bản (phát hiện một số tiến trình cụ thể), chưa bao quát được các ngữ cảnh phức tạp và đa dạng theo nhu cầu thực tế của từng phòng ban của từng doanh nghiệp.
+- **Phân quyền:** Cơ chế ủy quyền hiện tại đang thiên về quản lý danh tính thiết bị (Device-centric) nhiều hơn là ánh xạ chặt chẽ 1-1 với thuộc tính của người dùng (User-centric).
 
----
-*Dự án được phát triển nhằm mục đích nghiên cứu và cung cấp giải pháp an toàn thông tin toàn diện, tiết kiệm chi phí cho các doanh nghiệp SME.*
+## 7. Hướng phát triển trong tương lai
+Trong bối cảnh hành lang pháp lý về bảo vệ dữ liệu mạng tại Việt Nam ngày càng hoàn thiện, kiến trúc ZTNA dành cho SME cần được mở rộng và phát triển chuyên sâu hơn:
+- **Tối ưu hóa Chính sách:** Nghiên cứu và triển khai các bộ luật Rego phức tạp hơn trên OPA, kết hợp đánh giá đa yếu tố (vị trí địa lý, thời gian truy cập, tích hợp AI để giám sát và phát hiện hành vi bất thường).
+- **Tích hợp Claims Mapping:** Tích hợp sâu hơn giữa Keycloak và OpenZiti (ExtJWT Claims Mapping) để đảm bảo quyền truy cập được gắn liền với đúng người dùng thật sự trên đúng thiết bị được cấp phép.
+- **Đóng gói giải pháp:** Tự động hóa quá trình triển khai hệ thống (Infrastructure as Code) để các doanh nghiệp SME có thể dễ dàng áp dụng mà không cần quá nhiều chuyên môn về quản trị hạ tầng.
+## 8. Lưu ý
+Các thông tin tài khoản như email, password, tài khoản admin đều là các tài khoản giả lập được tạo để kiểm tra và đánh giá hệ thống.
