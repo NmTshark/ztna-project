@@ -55,3 +55,4 @@ Trong bối cảnh hành lang pháp lý về bảo vệ dữ liệu mạng tại
 - **Đóng gói giải pháp:** Tự động hóa quá trình triển khai hệ thống (Infrastructure as Code) để các doanh nghiệp SME có thể dễ dàng áp dụng mà không cần quá nhiều chuyên môn về quản trị hạ tầng.
 ## 8. Lưu ý
 Các thông tin tài khoản như email, password, tài khoản admin đều là các tài khoản giả lập được tạo để kiểm tra và đánh giá hệ thống.
+Nếu như các bạn triển khai thì có thể tự tìm hiểu và tạo cách dịch vụ mà các bạn muốn để có thể tự kiểm tra và setup các chính sách theo ý mình muốn.
